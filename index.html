@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV Vergleich – Flora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #f9f9f9;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input[type="file"],
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+  <h2>🌿 CSV-Vergleich starten</h2>
+  <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
+    <label for="original_csv">Original CSV-Datei:</label>
+    <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
+
+    <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
+    <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
+
+    <label for="pq">PQ-Wert (optional):</label>
+    <input type="text" name="pq" id="pq" value="7951">
+
+    <button type="submit">Vergleichen & CSV herunterladen</button>
+  </form>
+</body>
+</html>
