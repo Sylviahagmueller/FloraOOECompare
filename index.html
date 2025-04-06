@@ -31,7 +31,7 @@
       margin-top: 5px;
     }
 
-    button {
+    button, .zobodat-button {
       margin-top: 20px;
       padding: 10px 20px;
       background-color: #2e7d32;
@@ -40,26 +40,65 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
     }
 
-    button:hover {
+    button:hover, .zobodat-button:hover {
       background-color: #1b5e20;
+    }
+
+    .zobodat-link {
+      text-align: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
   <h2>🌿 CSV-Vergleich starten</h2>
+
+  <!-- 🔧 ZOBODAT-Dynamik-Button -->
+  <div class="zobodat-link">
+    <button class="zobodat-button" type="button" onclick="openZobodatLink()">🔗 ZOBODAT-Link öffnen</button>
+  </div>
+
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
-    <label for="original_csv">Original CSV-Datei :</label>
+    <label for="original_csv">Original CSV-Datei:</label>
     <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
 
     <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
     <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
 
-    <label for="pq">PQ-Wert (optional):</label>
+    <label for="pq">PQ-Wert (z. B. 7951):</label>
     <input type="text" name="pq" id="pq" value="7951">
+
+    <label for="quadrant">Quadrant (z. B. 1):</label>
+    <input type="text" name="quadrant" id="quadrant" value="1">
 
     <button type="submit">Vergleichen & CSV herunterladen</button>
   </form>
+
+  <script>
+    function openZobodatLink() {
+      const pq = document.getElementById('pq').value;
+      const quadrant = document.getElementById('quadrant').value;
+
+      const base = 'https://www.zobodat.at/belege.php?view=table&q=';
+      const params = [
+        'as_b[0][i]=art.reich',
+        'as_b[0][qt]=contains',
+        'as_b[0][v]=Viridiplantae',
+        `as_b[1][i]=ort.pq`,
+        `as_b[1][qt]=equals`,
+        `as_b[1][v]=${encodeURIComponent(pq)}`,
+        `as_b[2][i]=ort.quadrant`,
+        `as_b[2][qt]=equals`,
+        `as_b[2][v]=${encodeURIComponent(quadrant)}`
+      ];
+      
+      const url = `${base}&${params.join('&')}`;
+      window.open(url, '_blank');
+    }
+  </script>
 </body>
 </html>
