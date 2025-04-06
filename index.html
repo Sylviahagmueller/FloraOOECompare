@@ -50,32 +50,42 @@
 
     .zobodat-link {
       text-align: center;
-      margin-bottom: 20px;
+      margin: 20px 0;
+    }
+
+    .form-section {
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
   <h2>🌿 CSV-Vergleich starten</h2>
 
-  <!-- 🔧 ZOBODAT-Dynamik-Button -->
-  <div class="zobodat-link">
-    <button class="zobodat-button" type="button" onclick="openZobodatLink()">🔗 ZOBODAT-Link öffnen</button>
-  </div>
-
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
-    <label for="original_csv">Original CSV-Datei:</label>
-    <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
 
-    <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
-    <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
-
+    <!-- PQ -->
     <label for="pq">PQ-Wert (z. B. 7951):</label>
     <input type="text" name="pq" id="pq" value="7951">
 
+    <!-- Quadrant -->
     <label for="quadrant">Quadrant (z. B. 1):</label>
     <input type="text" name="quadrant" id="quadrant" value="1">
 
-    <button type="submit">Vergleichen & CSV herunterladen</button>
+    <!-- ZOBODAT-Link -->
+    <div class="zobodat-link">
+      <button class="zobodat-button" type="button" onclick="openZobodatLink()">🔗 ZOBODAT-Link öffnen</button>
+    </div>
+
+    <!-- Spacer -->
+    <div class="form-section">
+      <label for="original_csv">Original CSV-Datei:</label>
+      <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
+
+      <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
+      <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
+
+      <button type="submit">Vergleichen & CSV herunterladen</button>
+    </div>
   </form>
 
   <script>
@@ -95,7 +105,7 @@
         `as_b[2][qt]=equals`,
         `as_b[2][v]=${encodeURIComponent(quadrant)}`
       ];
-      
+
       const url = `${base}&${params.join('&')}`;
       window.open(url, '_blank');
     }
