@@ -177,8 +177,8 @@
         }
       })
       .catch(err => {
-        console.error(err);
-        alert("Fehler beim Abrufen der PQ-Daten.");
+        console.error("Fehler beim Abrufen:", err);
+        alert("Fehler beim Abrufen der PQ-Daten:\n" + err.message || err);
       });
   }
 </script>
