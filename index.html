@@ -18,6 +18,10 @@
       text-align: center;
       color: #2e7d32;
     }
+    h3 {
+      text-align: center;
+      color: #2e7d32;
+    }
 
     label {
       display: block;
@@ -59,7 +63,8 @@
   </style>
 </head>
 <body>
-  <h2>🌿 FloraOOE Compare - Welche Arten fehlen im Quadranten?</h2>
+  <h2>🌿 FloraOOE Compare</h2>
+  <h3>Welche Arten fehlen im Quadranten?</h3>
 
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
 
@@ -75,7 +80,7 @@
     
     <!-- Button für Berechnung -->
     <div style="text-align: right; margin-bottom: 30px;">
-      <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 PQ & Quadrant berechnen</button>
+      <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
     </div>
     
     <!-- PQ -->
@@ -93,7 +98,7 @@
 
     <!-- Spacer -->
     <div class="form-section">
-      <label for="original_csv">Original CSV-Datei:</label>
+      <label for="original_csv">Original ZOBODAT-Datei (csv):</label>
       <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
 
       <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
