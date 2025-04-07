@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>CSV Vergleich – Flora</title>
+  <title>FloraOOE Compare - CSV Vergleich</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -59,10 +59,25 @@
   </style>
 </head>
 <body>
-  <h2>🌿 CSV-Vergleich starten</h2>
+  <h2>🌿 FloraOOE Compare - Welche Arten fehlen im Quadranten?</h2>
 
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
 
+    <!-- 1️⃣ Eingabefelder für Koordinaten -->
+    <label for="lat">📍 Breitengrad (Latitude):</label>
+    <input type="text" id="lat" placeholder="z. B. 48.0247">
+    
+    <label for="lon">📍 Längengrad (Longitude):</label>
+    <input type="text" id="lon" placeholder="z. B. 14.3192">
+    
+    <!-- 2️⃣ Google Maps-Karte -->
+    <div id="map" style="height: 300px; margin: 20px 0; border: 1px solid #ccc;"></div>
+    
+    <!-- 3️⃣ Button zur Berechnung -->
+    <div style="text-align: right; margin-bottom: 30px;">
+      <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 PQ & Quadrant berechnen</button>
+    </div>
+    
     <!-- PQ -->
     <label for="pq">PQ-Wert (z. B. 7951):</label>
     <input type="text" name="pq" id="pq" value="7951">
@@ -73,7 +88,7 @@
 
     <!-- ZOBODAT-Link -->
     <div class="zobodat-link">
-      <button class="zobodat-button" type="button" onclick="openZobodatLink()">🔗 ZOBODAT-Link öffnen</button>
+      <button class="zobodat-button" type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
     </div>
 
     <!-- Spacer -->
@@ -109,6 +124,65 @@
       const url = `${base}&${params.join('&')}`;
       window.open(url, '_blank');
     }
+    </script>
+  
+    <script>
+    function calculatePQ() {
+      const lat = document.getElementById("lat").value;
+      const lon = document.getElementById("lon").value;
+  
+      if (!lat || !lon) {
+        alert("Bitte beide Koordinaten eingeben.");
+        return;
+      }
+  
+      const url = `https://flora-calc-quadrant-p-285194166533.europe-west3.run.app?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+  
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.pq && data.quadrant) {
+            document.getElementById("pq").value = data.pq;
+            document.getElementById("quadrant").value = data.quadrant;
+          } else {
+            alert("Ungültige Antwort von der API.");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Fehler beim Abrufen der PQ-Daten.");
+        });
+    }
+  
+    // Google Maps Init
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 48.2, lng: 14.2 },
+        zoom: 8,
+      });
+  
+      const marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+      });
+  
+      map.addListener("click", (e) => {
+        const lat = e.latLng.lat();
+        const lon = e.latLng.lng();
+  
+        document.getElementById("lat").value = lat.toFixed(6);
+        document.getElementById("lon").value = lon.toFixed(6);
+  
+        marker.setPosition(e.latLng);
+      });
+    }
   </script>
+
+<!-- Google Maps laden (ersetze YOUR_API_KEY mit deinem echten API-Schlüssel) -->
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>
+
+ 
 </body>
 </html>
