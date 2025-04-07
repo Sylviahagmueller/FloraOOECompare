@@ -63,17 +63,17 @@
 
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
 
-    <!-- 1️⃣ Eingabefelder für Koordinaten -->
+    <!-- 🗺️ Leaflet-Koordinatenermittlung -->
     <label for="lat">📍 Breitengrad (Latitude):</label>
     <input type="text" id="lat" placeholder="z. B. 48.0247">
     
     <label for="lon">📍 Längengrad (Longitude):</label>
     <input type="text" id="lon" placeholder="z. B. 14.3192">
     
-    <!-- 2️⃣ Google Maps-Karte -->
+    <!-- Leaflet Karte -->
     <div id="map" style="height: 300px; margin: 20px 0; border: 1px solid #ccc;"></div>
     
-    <!-- 3️⃣ Button zur Berechnung -->
+    <!-- Button für Berechnung -->
     <div style="text-align: right; margin-bottom: 30px;">
       <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 PQ & Quadrant berechnen</button>
     </div>
@@ -177,6 +177,62 @@
       });
     }
   </script>
+
+  <!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  // 🌍 Karte initialisieren
+  const map = L.map('map').setView([48.2, 14.2], 8);
+
+  // OpenStreetMap Layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap-Mitwirkende'
+  }).addTo(map);
+
+  // Marker zum Bewegen
+  const marker = L.marker([48.2, 14.2], { draggable: true }).addTo(map);
+
+  // Klick auf Karte → Koordinaten setzen
+  map.on('click', function (e) {
+    const lat = e.latlng.lat.toFixed(6);
+    const lon = e.latlng.lng.toFixed(6);
+
+    marker.setLatLng(e.latlng);
+
+    document.getElementById("lat").value = lat;
+    document.getElementById("lon").value = lon;
+  });
+
+  // 📍 Koordinaten → PQ-Quadrant holen
+  function calculatePQ() {
+    const lat = document.getElementById("lat").value;
+    const lon = document.getElementById("lon").value;
+
+    if (!lat || !lon) {
+      alert("Bitte beide Koordinaten eingeben.");
+      return;
+    }
+
+    const url = `https://flora-calc-quadrant-p-285194166533.europe-west3.run.app?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (data.pq && data.quadrant) {
+          document.getElementById("pq").value = data.pq;
+          document.getElementById("quadrant").value = data.quadrant;
+        } else {
+          alert("Ungültige Antwort von der API.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Fehler beim Abrufen der PQ-Daten.");
+      });
+  }
+</script>
 
 <!-- Google Maps laden (ersetze YOUR_API_KEY mit deinem echten API-Schlüssel) -->
 <script async
