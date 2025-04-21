@@ -24,6 +24,12 @@
       margin-top: 15px;
     }
 
+    .hint {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
     input[type="file"],
     input[type="text"] {
       width: 100%;
@@ -64,6 +70,10 @@
     .form-section {
       margin-top: 30px;
     }
+
+    .center {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -71,41 +81,42 @@
   <h3>Welche Arten fehlen im Quadranten?</h3>
 
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
-    
-    <!-- Karte -->
-    <div id="map" style="height: 300px; margin: 20px 0; border: 1px solid #ccc;"></div>
 
-    <!-- Koordinaten -->
+    <!-- 🗺️ Karte & Koordinaten -->
+    <label for="map">📌 Punkt auf Karte auswählen oder Koordinaten eingeben</label>
+    <div id="map" style="height: 300px; margin: 10px 0 20px 0; border: 1px solid #ccc;"></div>
+
     <div class="row">
       <input type="text" id="lat" placeholder="📍 Breitengrad (z. B. 48.0247)">
       <input type="text" id="lon" placeholder="📍 Längengrad (z. B. 14.3192)">
     </div>
 
-    <!-- Button für Berechnung -->
-    <div style="text-align: right;">
+    <div class="center">
       <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
+      <div class="hint">Quadrant anhand der Koordinaten berechnen</div>
     </div>
 
-    <!-- PQ + Quadrant -->
     <div class="row">
       <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)" value="7951">
       <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)" value="1">
     </div>
 
-    <!-- ZOBODAT-Link -->
     <div class="zobodat-link">
       <button class="zobodat-button" type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
+      <div class="hint">Zobodat-CSV-Datei für den Original-Quadranten und zum Vergleich für ein oder mehrere umliegende Quadranten herunterladen.</div>
     </div>
 
-    <!-- Dateiupload -->
+    <!-- 📂 Dateiupload -->
     <div class="form-section">
       <label for="original_csv">Original ZOBODAT-Datei (CSV):</label>
+      <div class="hint">Die CSV-Datei für den aktuellen Quadranten</div>
       <input type="file" name="original_csv" id="original_csv" accept=".csv" required style="padding: 14px;">
 
       <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
+      <div class="hint">CSV-Dateien aus Nachbar-Quadranten oder anderen Regionen zum Vergleich</div>
       <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required style="padding: 14px;">
 
-      <!-- Strict Mode Checkbox -->
+      <!-- 🔘 Strict Mode -->
       <label style="margin-top: 20px;">
         <input type="checkbox" name="strict" value="true">
         Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
@@ -122,7 +133,7 @@
     </div>
   </form>
 
-  <!-- JavaScript-Funktionen -->
+  <!-- 📜 JS für Koordinaten und Karte -->
   <script>
     function openZobodatLink() {
       const pq = document.getElementById('pq').value;
@@ -173,7 +184,7 @@
     }
   </script>
 
-  <!-- Leaflet -->
+  <!-- 🗺️ Leaflet Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
