@@ -97,7 +97,41 @@
       background-color: #c3e6cb;
     }
 
-
+    @media (max-width: 600px) {
+      body {
+        padding: 20px;
+        margin: 20px 10px;
+        font-size: 16px;
+      }
+  
+      h2, h3 {
+        font-size: 20px;
+      }
+  
+      input[type="text"],
+      input[type="file"],
+      button,
+      .zobodat-button {
+        font-size: 16px;
+        padding: 12px;
+      }
+  
+      .section-title {
+        font-size: 16px;
+      }
+  
+      .row {
+        flex-direction: column;
+      }
+  
+      .zobodat-link {
+        margin: 15px 0;
+      }
+  
+      #map {
+        height: 250px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -194,7 +228,7 @@
       const lon = document.getElementById("lon").value;
 
       if (!lat || !lon) {
-        alert("Bitte beide Koordinaten eingeben.");
+        alert("Bitte beide Koordinaten eingeben oder auf Karte tippen.");
         return;
       }
 
