@@ -97,8 +97,8 @@
     </div>
 
     <div class="row">
-      <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)" value="7951">
-      <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)" value="1">
+      <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)">
+      <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
     </div>
 
     <div class="zobodat-link">
@@ -127,7 +127,7 @@
         <button type="submit"
                 formaction="https://flora-compare-preview-p-285194166533.europe-west3.run.app"
                 formtarget="_blank">
-          Liste der fehlenden Arten im neuen Tab
+          Liste der fehlenden Arten anzeigen
         </button>
       </div>
     </div>
@@ -136,9 +136,13 @@
   <!-- 📜 JS für Koordinaten und Karte -->
   <script>
     function openZobodatLink() {
-      const pq = document.getElementById('pq').value;
-      const quadrant = document.getElementById('quadrant').value;
-
+      let pq = document.getElementById('pq').value.trim();
+      let quadrant = document.getElementById('quadrant').value.trim();
+  
+      // Fallback-Werte setzen, wenn leer
+      if (!pq) pq = '7951';
+      if (!quadrant) quadrant = '1';
+  
       const base = 'https://www.zobodat.at/belege.php?view=table&q=';
       const params = [
         'as_b[0][i]=art.reich',
@@ -151,7 +155,7 @@
         `as_b[2][qt]=equals`,
         `as_b[2][v]=${encodeURIComponent(quadrant)}`
       ];
-
+  
       const url = `${base}&${params.join('&')}`;
       window.open(url, '_blank');
     }
