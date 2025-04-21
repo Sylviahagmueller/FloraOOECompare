@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 600px;
+      max-width: 700px;
       margin: 40px auto;
       background-color: #f9f9f9;
       padding: 30px;
@@ -14,11 +14,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    h2 {
-      text-align: center;
-      color: #2e7d32;
-    }
-    h3 {
+    h2, h3 {
       text-align: center;
       color: #2e7d32;
     }
@@ -31,21 +27,29 @@
     input[type="file"],
     input[type="text"] {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
+      font-size: 15px;
       margin-top: 5px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row input[type="text"] {
+      flex: 1;
     }
 
     button, .zobodat-button {
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 20px;
       background-color: #2e7d32;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-size: 16px;
-      text-decoration: none;
-      display: inline-block;
     }
 
     button:hover, .zobodat-button:hover {
@@ -58,7 +62,7 @@
     }
 
     .form-section {
-      margin-top: 40px;
+      margin-top: 30px;
     }
   </style>
 </head>
@@ -67,50 +71,47 @@
   <h3>Welche Arten fehlen im Quadranten?</h3>
 
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
-
-    <!-- 🗺️ Leaflet-Koordinatenermittlung -->
-    <label for="lat">📍 Breitengrad (Latitude):</label>
-    <input type="text" id="lat" placeholder="z. B. 48.0247">
     
-    <label for="lon">📍 Längengrad (Longitude):</label>
-    <input type="text" id="lon" placeholder="z. B. 14.3192">
-    
-    <!-- Leaflet Karte -->
+    <!-- Karte -->
     <div id="map" style="height: 300px; margin: 20px 0; border: 1px solid #ccc;"></div>
-    
+
+    <!-- Koordinaten -->
+    <div class="row">
+      <input type="text" id="lat" placeholder="📍 Breitengrad (z. B. 48.0247)">
+      <input type="text" id="lon" placeholder="📍 Längengrad (z. B. 14.3192)">
+    </div>
+
     <!-- Button für Berechnung -->
-    <div style="text-align: right; margin-bottom: 30px;">
+    <div style="text-align: right;">
       <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
     </div>
-    
-    <!-- PQ -->
-    <label for="pq">PQ-Wert (z. B. 7951):</label>
-    <input type="text" name="pq" id="pq" value="7951">
 
-    <!-- Quadrant -->
-    <label for="quadrant">Quadrant (z. B. 1):</label>
-    <input type="text" name="quadrant" id="quadrant" value="1">
+    <!-- PQ + Quadrant -->
+    <div class="row">
+      <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)" value="7951">
+      <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)" value="1">
+    </div>
 
     <!-- ZOBODAT-Link -->
     <div class="zobodat-link">
       <button class="zobodat-button" type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
     </div>
 
-    <!-- Spacer -->
+    <!-- Dateiupload -->
     <div class="form-section">
-      <label for="original_csv">Original ZOBODAT-Datei (csv):</label>
-      <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
+      <label for="original_csv">Original ZOBODAT-Datei (CSV):</label>
+      <input type="file" name="original_csv" id="original_csv" accept=".csv" required style="padding: 14px;">
 
       <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
-      <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
+      <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required style="padding: 14px;">
 
+      <!-- Strict Mode Checkbox -->
       <label style="margin-top: 20px;">
         <input type="checkbox" name="strict" value="true">
         Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
       </label>
 
-
-      <div style="text-align: center; margin-top: 20px;">
+      <div style="text-align: center; margin-top: 30px;">
         <button type="submit">Vergleichen & CSV herunterladen</button>
         <button type="submit"
                 formaction="https://flora-compare-preview-p-285194166533.europe-west3.run.app"
@@ -118,10 +119,10 @@
           Liste der fehlenden Arten im neuen Tab
         </button>
       </div>
-
     </div>
   </form>
 
+  <!-- JavaScript-Funktionen -->
   <script>
     function openZobodatLink() {
       const pq = document.getElementById('pq').value;
@@ -143,70 +144,55 @@
       const url = `${base}&${params.join('&')}`;
       window.open(url, '_blank');
     }
-    </script>
-  
-   
-  <!-- Leaflet CSS & JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<script>
-  // 🌍 Karte initialisieren
-  const map = L.map('map').setView([48.2, 14.2], 8);
+    function calculatePQ() {
+      const lat = document.getElementById("lat").value;
+      const lon = document.getElementById("lon").value;
 
-  // OpenStreetMap Layer
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap-Mitwirkende'
-  }).addTo(map);
+      if (!lat || !lon) {
+        alert("Bitte beide Koordinaten eingeben.");
+        return;
+      }
 
-  // Marker zum Bewegen
-  const marker = L.marker([48.2, 14.2], { draggable: true }).addTo(map);
+      const url = `https://flora-calc-quadrant-p-285194166533.europe-west3.run.app?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
 
-  // Klick auf Karte → Koordinaten setzen
-  map.on('click', function (e) {
-    const lat = e.latlng.lat.toFixed(6);
-    const lon = e.latlng.lng.toFixed(6);
-
-    marker.setLatLng(e.latlng);
-
-    document.getElementById("lat").value = lat;
-    document.getElementById("lon").value = lon;
-  });
-
-  // 📍 Koordinaten → PQ-Quadrant holen
-  function calculatePQ() {
-    const lat = document.getElementById("lat").value;
-    const lon = document.getElementById("lon").value;
-
-    if (!lat || !lon) {
-      alert("Bitte beide Koordinaten eingeben.");
-      return;
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.pq && data.quadrant) {
+            document.getElementById("pq").value = data.pq;
+            document.getElementById("quadrant").value = data.quadrant;
+          } else {
+            alert("Ungültige Antwort von der API.");
+          }
+        })
+        .catch(err => {
+          console.error("Fehler beim Abrufen:", err);
+          alert("Fehler beim Abrufen der PQ-Daten:\n" + (err.message || err));
+        });
     }
+  </script>
 
-    const url = `https://flora-calc-quadrant-p-285194166533.europe-west3.run.app?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if (data.pq && data.quadrant) {
-          document.getElementById("pq").value = data.pq;
-          document.getElementById("quadrant").value = data.quadrant;
-        } else {
-          alert("Ungültige Antwort von der API.");
-        }
-      })
-      .catch(err => {
-        console.error("Fehler beim Abrufen:", err);
-        alert("Fehler beim Abrufen der PQ-Daten:\n" + err.message || err);
-      });
-  }
-</script>
+  <script>
+    const map = L.map('map').setView([48.2, 14.2], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap-Mitwirkende'
+    }).addTo(map);
 
-<!-- Google Maps laden (ersetze YOUR_API_KEY mit deinem echten API-Schlüssel) -->
-<script async
-  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-</script>
+    const marker = L.marker([48.2, 14.2], { draggable: true }).addTo(map);
 
- 
+    map.on('click', function (e) {
+      const lat = e.latlng.lat.toFixed(6);
+      const lon = e.latlng.lng.toFixed(6);
+
+      marker.setLatLng(e.latlng);
+      document.getElementById("lat").value = lat;
+      document.getElementById("lon").value = lon;
+    });
+  </script>
 </body>
 </html>
