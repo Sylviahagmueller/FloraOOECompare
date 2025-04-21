@@ -104,7 +104,11 @@
       <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
       <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
 
-      
+      <label style="margin-top: 20px;">
+        <input type="checkbox" name="strict" value="true">
+        Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
+      </label>
+
 
       <div style="text-align: center; margin-top: 20px;">
         <button type="submit">Vergleichen & CSV herunterladen</button>
