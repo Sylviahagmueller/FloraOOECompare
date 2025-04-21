@@ -76,13 +76,18 @@
     }
 
    
-    input[type="file"] {
-      padding: 16px;
-      font-size: 16px;
-      background-color: #d4edda;
+    input[type="file"]::-webkit-file-upload-button {
+      background-color: #d4edda;       /* hellgrün */
       border: 1px solid #c3e6cb;
-      border-radius: 6px;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 5px;
       cursor: pointer;
+      font-size: 15px;
+    }
+  
+    input[type="file"]::-webkit-file-upload-button:hover {
+      background-color: #c3e6cb;
     }
 
 
@@ -113,10 +118,14 @@
       <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
     </div>
 
+    <label>📌 Zobodat-CSV-Datei für den aktuellen Quadranten und zum Vergleich für ein oder mehrere umliegende Quadranten herunterladen</label>
+    
     <div class="zobodat-link">
       <button class="zobodat-button" type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
-      <div class="hint">Zobodat-CSV-Datei für den Original-Quadranten und zum Vergleich für ein oder mehrere umliegende Quadranten herunterladen.</div>
+      <div class="hint">Artenlisten von der Zobodat herunterladen</div>
     </div>
+
+    <label>📌 Dateien vergleichen</label>
 
     <!-- 📂 Dateiupload -->
     <div class="form-section">
