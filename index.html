@@ -19,6 +19,15 @@
       color: #2e7d32;
     }
 
+    .section-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: #2e7d32;
+      margin: 25px 0 10px;
+      border-left: 4px solid #a5d6a7;
+      padding-left: 10px;
+    }
+
     label {
       display: block;
       margin-top: 15px;
@@ -100,7 +109,8 @@
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
 
     <!-- 🗺️ Karte & Koordinaten -->
-    <label for="map">📌 Punkt auf Karte auswählen oder Koordinaten eingeben</label>
+    <div class="section-title">📍 Punkt auf Karte auswählen oder Koordinaten eingeben</div>
+
     <div id="map" style="height: 300px; margin: 10px 0 20px 0; border: 1px solid #ccc;"></div>
 
     <div class="row">
@@ -118,14 +128,14 @@
       <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
     </div>
 
-    <label>📌 Zobodat-CSV-Datei für den aktuellen Quadranten und zum Vergleich für ein oder mehrere umliegende Quadranten herunterladen</label>
+    <div class="section-title">📌 Zobodat-CSV-Dateien herunterladen</div>
     
     <div class="zobodat-link">
       <button class="zobodat-button" type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
       <div class="hint">Artenlisten von der Zobodat herunterladen</div>
     </div>
 
-    <label>📌 Dateien vergleichen</label>
+    <div class="section-title">📌 Dateien vergleichen und fehlende Arten ermitteln</div>
 
     <!-- 📂 Dateiupload -->
     <div class="form-section">
