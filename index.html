@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FloraOOE Compare - CSV Vergleich</title>
   <style>
     :root {
@@ -11,31 +11,41 @@
       --gray: #f8f9fa;
       --text-dark: #212529;
     }
+
     body {
       margin: 0;
-      font-family: "Helvetica Neue", sans-serif;
+      font-family: sans-serif;
       background-color: var(--gray);
       color: var(--text-dark);
       padding: 2rem;
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-family: sans-serif;
+      color: inherit;
+      font-weight: normal;
     }
 
     h2, h3 {
-      color: #2d6a4f;
+      color: var(--primary);
       margin-bottom: 0.5rem;
     }
 
     .section-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: bold;
-      color: #2d6a4f;
-      margin-top: 1.5rem;
+      color: #000;
       margin-bottom: 0.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 0.5rem;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
     }
 
     label {
@@ -71,7 +81,7 @@
     button {
       margin-top: 1rem;
       padding: 0.5rem 1rem;
-      background-color: #2d6a4f;
+      background-color: var(--primary);
       color: white;
       border: none;
       border-radius: 0.25rem;
@@ -91,6 +101,7 @@
       height: 300px;
       margin-top: 0.5rem;
       border: 1px solid #ccc;
+      border-radius: 0.5rem;
     }
 
     @media (max-width: 600px) {
@@ -110,51 +121,58 @@
 
   <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
 
-    <div class="section-title">1. Punkt auf Karte auswählen oder Koordinaten eingeben</div>
-    <div id="map"></div>
+    <!-- Abschnitt 1 -->
+    <div class="card">
+      <div class="section-title">1. Punkt auf Karte auswählen oder Koordinaten eingeben</div>
+      <div id="map"></div>
 
-    <div class="row">
-      <input type="text" id="lat" placeholder="📍 Breitengrad (z. B. 48.0247)">
-      <input type="text" id="lon" placeholder="📍 Längengrad (z. B. 14.3192)">
+      <input type="text" id="coords" placeholder="📍 Koordinaten (z. B. 48.304023, 14.283864)">
+
+      <div class="center">
+        <button type="button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
+        <div class="hint">Quadrant anhand der Koordinaten berechnen</div>
+      </div>
+
+      <div class="row">
+        <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)">
+        <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
+      </div>
     </div>
 
-    <div class="center">
-      <button type="button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
-      <div class="hint">Quadrant anhand der Koordinaten berechnen</div>
+    <!-- Abschnitt 2 -->
+    <div class="card">
+      <div class="section-title">2. Zobodat-CSV-Dateien herunterladen</div>
+      <div class="center">
+        <button type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
+        <div class="hint">Artenlisten von der Zobodat herunterladen</div>
+      </div>
     </div>
 
-    <div class="row">
-      <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)">
-      <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
-    </div>
+    <!-- Abschnitt 3 -->
+    <div class="card">
+      <div class="section-title">3. Dateien vergleichen und fehlende Arten ermitteln</div>
 
-    <div class="section-title">2. Zobodat-CSV-Dateien herunterladen</div>
-    <div class="center">
-      <button type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
-      <div class="hint">Artenlisten von der Zobodat herunterladen</div>
-    </div>
+      <label for="original_csv">Original ZOBODAT-Datei (CSV):</label>
+      <div class="hint">Die CSV-Datei für den aktuellen Quadranten</div>
+      <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
 
-    <div class="section-title">3. Dateien vergleichen und fehlende Arten ermitteln</div>
-    <label for="original_csv">Original ZOBODAT-Datei (CSV):</label>
-    <div class="hint">Die CSV-Datei für den aktuellen Quadranten</div>
-    <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
+      <label for="compare_csvs">Vergleichsdateien (mehrere erlaubt):</label>
+      <div class="hint">CSV-Dateien aus Nachbar-Quadranten zum Vergleich</div>
+      <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
 
-    <label for="compare_csvs">Vergleichsdateien (mehrere erlaubt):</label>
-    <div class="hint">CSV-Dateien aus Nachbar-Quadranten zum Vergleich</div>
-    <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
+      <label style="margin-top: 1rem;">
+        <input type="checkbox" name="strict" value="true">
+        Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
+      </label>
 
-    <label style="margin-top: 1rem;">
-      <input type="checkbox" name="strict" value="true">
-      Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
-    </label>
-
-    <div class="center">
-      <button type="submit">Vergleichen & CSV herunterladen</button>
-      <button type="submit"
-              formaction="https://flora-compare-preview-p-285194166533.europe-west3.run.app"
-              formtarget="_blank">
-        Liste der fehlenden Arten anzeigen
-      </button>
+      <div class="center">
+        <button type="submit">Vergleichen & CSV herunterladen</button>
+        <button type="submit"
+                formaction="https://flora-compare-preview-p-285194166533.europe-west3.run.app"
+                formtarget="_blank">
+          Liste der fehlenden Arten anzeigen
+        </button>
+      </div>
     </div>
   </form>
 
@@ -168,12 +186,12 @@
     }).addTo(map);
 
     const marker = L.marker([48.2, 14.2], { draggable: true }).addTo(map);
+
     map.on('click', function (e) {
       const lat = e.latlng.lat.toFixed(6);
       const lon = e.latlng.lng.toFixed(6);
       marker.setLatLng(e.latlng);
-      document.getElementById("lat").value = lat;
-      document.getElementById("lon").value = lon;
+      document.getElementById("coords").value = `${lat}, ${lon}`;
     });
 
     function openZobodatLink() {
@@ -198,13 +216,24 @@
     }
 
     function calculatePQ() {
-      const lat = document.getElementById("lat").value;
-      const lon = document.getElementById("lon").value;
-      if (!lat || !lon) {
-        alert("Bitte beide Koordinaten eingeben oder auf Karte tippen.");
+      const coordInput = document.getElementById("coords").value.trim();
+      const parts = coordInput.split(",");
+
+      if (parts.length !== 2) {
+        alert("Bitte gültige Koordinaten im Format 'Breitengrad, Längengrad' eingeben.");
         return;
       }
+
+      const lat = parseFloat(parts[0].trim());
+      const lon = parseFloat(parts[1].trim());
+
+      if (isNaN(lat) || isNaN(lon)) {
+        alert("Koordinaten ungültig.");
+        return;
+      }
+
       const url = `https://flora-calc-quadrant-p-285194166533.europe-west3.run.app?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+
       fetch(url)
         .then(res => res.json())
         .then(data => {
