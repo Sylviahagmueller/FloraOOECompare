@@ -5,138 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FloraOOE Compare - CSV Vergleich</title>
   <style>
-    :root {
-      --primary: #2d6a4f;
-      --primary-light: #95d5b2;
-      --gray: #f8f9fa;
-      --text-dark: #212529;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: "Helvetica Neue", sans-serif;
-      background-color: var(--gray);
-      color: var(--text-dark);
-      padding: 2rem;
-      margin: 0;
+      font-family: sans-serif;
+      padding: 1rem;
+      background: white;
     }
 
     h2, h3 {
-      text-align: center;
-      color: var(--primary);
+      color: #2d6a4f;
       margin-bottom: 0.5rem;
-    }
-
-    .card {
-      max-width: 800px;
-      background: #fff;
-      border-radius: 0.75rem;
-      padding: 2rem;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      margin: 2rem auto;
     }
 
     .section-title {
       font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--primary);
-      margin-top: 2rem;
+      font-weight: bold;
+      color: #2d6a4f;
+      margin-top: 1.5rem;
       margin-bottom: 0.5rem;
     }
 
     label {
       display: block;
       margin-top: 1rem;
-      font-weight: 500;
     }
 
     .hint {
       font-size: 0.85rem;
       color: #666;
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
     }
 
     input[type="file"],
     input[type="text"] {
       width: 100%;
-      padding: 0.6rem 0.8rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
+      padding: 0.5rem;
       font-size: 1rem;
-      margin-top: 0.4rem;
-    }
-
-    input[type="file"]::-webkit-file-upload-button {
-      background-color: var(--primary-light);
-      border: none;
-      color: #000;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    input[type="file"]::-webkit-file-upload-button:hover {
-      background-color: #b7e4c7;
+      margin-top: 0.3rem;
     }
 
     .row {
       display: flex;
       gap: 1rem;
-      margin-top: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
     }
 
     .row input[type="text"] {
       flex: 1;
     }
 
-    button, .zobodat-button {
-      margin-top: 1.5rem;
-      padding: 0.75rem 1.5rem;
-      background-color: var(--primary);
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #2d6a4f;
       color: white;
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 0.25rem;
       cursor: pointer;
       font-size: 1rem;
-      transition: background 0.3s ease;
     }
 
-    button:hover, .zobodat-button:hover {
+    button:hover {
       background-color: #1b4332;
     }
 
-    .zobodat-link {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
     .center {
-      text-align: center;
+      margin-top: 1rem;
     }
 
     #map {
       height: 300px;
+      margin-top: 0.5rem;
       border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      margin-top: 1rem;
     }
 
     @media (max-width: 600px) {
-      body {
-        padding: 1rem;
-      }
-
       .row {
         flex-direction: column;
-      }
-
-      input[type="text"],
-      input[type="file"],
-      button {
-        font-size: 1rem;
       }
 
       #map {
@@ -146,62 +91,60 @@
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>🌿 FloraOOE Compare</h2>
-    <h3>Welche Arten fehlen im Quadranten?</h3>
+  <h2>🌿 FloraOOE Compare</h2>
+  <h3>Welche Arten fehlen im Quadranten?</h3>
 
-    <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
+  <form action="https://flora-compare-p-285194166533.europe-west3.run.app" method="post" enctype="multipart/form-data">
 
-      <div class="section-title">1. Punkt auf Karte auswählen oder Koordinaten eingeben</div>
-      <div id="map"></div>
+    <div class="section-title">1. Punkt auf Karte auswählen oder Koordinaten eingeben</div>
+    <div id="map"></div>
 
-      <div class="row">
-        <input type="text" id="lat" placeholder="📍 Breitengrad (z. B. 48.0247)">
-        <input type="text" id="lon" placeholder="📍 Längengrad (z. B. 14.3192)">
-      </div>
+    <div class="row">
+      <input type="text" id="lat" placeholder="📍 Breitengrad (z. B. 48.0247)">
+      <input type="text" id="lon" placeholder="📍 Längengrad (z. B. 14.3192)">
+    </div>
 
-      <div class="center">
-        <button type="button" class="zobodat-button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
-        <div class="hint">Quadrant anhand der Koordinaten berechnen</div>
-      </div>
+    <div class="center">
+      <button type="button" onclick="calculatePQ()">📍 Quadrant berechnen</button>
+      <div class="hint">Quadrant anhand der Koordinaten berechnen</div>
+    </div>
 
-      <div class="row">
-        <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)">
-        <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
-      </div>
+    <div class="row">
+      <input type="text" name="pq" id="pq" placeholder="PQ-Wert (z. B. 7951)">
+      <input type="text" name="quadrant" id="quadrant" placeholder="Quadrant (z. B. 1)">
+    </div>
 
-      <div class="section-title">2. Zobodat-CSV-Dateien herunterladen</div>
-      <div class="zobodat-link">
-        <button class="zobodat-button" type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
-        <div class="hint">Artenlisten von der Zobodat herunterladen</div>
-      </div>
+    <div class="section-title">2. Zobodat-CSV-Dateien herunterladen</div>
+    <div class="center">
+      <button type="button" onclick="openZobodatLink()">ZOBODAT-Link öffnen</button>
+      <div class="hint">Artenlisten von der Zobodat herunterladen</div>
+    </div>
 
-      <div class="section-title">3. Dateien vergleichen und fehlende Arten ermitteln</div>
-      <label for="original_csv">Original ZOBODAT-Datei (CSV):</label>
-      <div class="hint">Die CSV-Datei für den aktuellen Quadranten</div>
-      <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
+    <div class="section-title">3. Dateien vergleichen und fehlende Arten ermitteln</div>
+    <label for="original_csv">Original ZOBODAT-Datei (CSV):</label>
+    <div class="hint">Die CSV-Datei für den aktuellen Quadranten</div>
+    <input type="file" name="original_csv" id="original_csv" accept=".csv" required>
 
-      <label for="compare_csvs">Vergleichsdateien (eine oder mehrere):</label>
-      <div class="hint">CSV-Dateien aus Nachbar-Quadranten oder anderen Regionen</div>
-      <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
+    <label for="compare_csvs">Vergleichsdateien (mehrere erlaubt):</label>
+    <div class="hint">CSV-Dateien aus Nachbar-Quadranten zum Vergleich</div>
+    <input type="file" name="compare_csvs" id="compare_csvs" accept=".csv" multiple required>
 
-      <label style="margin-top: 1rem;">
-        <input type="checkbox" name="strict" value="true">
-        Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
-      </label>
+    <label style="margin-top: 1rem;">
+      <input type="checkbox" name="strict" value="true">
+      Nur Arten anzeigen, die in <strong>allen</strong> Vergleichsdateien vorhanden sind
+    </label>
 
-      <div class="center">
-        <button type="submit">Vergleichen & CSV herunterladen</button>
-        <button type="submit"
-                formaction="https://flora-compare-preview-p-285194166533.europe-west3.run.app"
-                formtarget="_blank">
-          Liste der fehlenden Arten anzeigen
-        </button>
-      </div>
-    </form>
-  </div>
+    <div class="center">
+      <button type="submit">Vergleichen & CSV herunterladen</button>
+      <button type="submit"
+              formaction="https://flora-compare-preview-p-285194166533.europe-west3.run.app"
+              formtarget="_blank">
+        Liste der fehlenden Arten anzeigen
+      </button>
+    </div>
+  </form>
 
-  <!-- Scripts: Karte, PQ -->
+  <!-- Leaflet Karte & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
